@@ -1,0 +1,35 @@
+load("@prelude//rust:cargo_buildscript.bzl", "buildscript_run")
+
+rust_binary(
+    name = "neptune",
+    srcs = glob(["src/**/*.rs"]),
+    deps = [
+        "//third-party:libc",
+        "//third-party:reqwest",
+        "//third-party:tracing",
+        "//third-party:tracing-subscriber",
+        "//third-party:tokio",
+        "//third-party:tokio-test"
+    ]
+)
+
+rust_library(
+    name = "ztm-lib",
+    srcs = ["src/lib.rs"],
+    deps = [
+        "//third-party:libc",
+        "//third-party:reqwest",
+        "//third-party:tracing",
+        "//third-party:tracing-subscriber",
+        "//third-party:tokio",
+        "//third-party:tokio-test",
+        ":build-neptune-ztm"
+    ]
+)
+
+buildscript_run(
+    name = "build-neptune-ztm",
+    buildscript_rule = ":ztm-lib",
+    package_name = "neptune",
+    version = "0.1.0",
+)

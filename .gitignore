@@ -23,5 +23,6 @@ Cargo.lock
 ztm_agent.db
 ztm_agent_db*
 
-# buck2 out
+# buck2 related
 buck-out
+.cargo/

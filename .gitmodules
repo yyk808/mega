@@ -2,3 +2,6 @@
 	path = neptune/libs/ztm
 	url = https://github.com/flomesh-io/ztm.git
     ignore = dirty
+[submodule "prelude"]
+	path = prelude
+	url = https://github.com/facebook/buck2-prelude.git
