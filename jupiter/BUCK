@@ -1,0 +1,34 @@
+rust_library(
+    name = "jupiter",
+    srcs = glob(["src/**/*.rs"]),
+    deps = [
+        ":callisto",
+        "//common:common",
+        "//venus:venus",
+        "//mercury:mercury",
+        "//third-party:sea-orm",
+        "//third-party:tracing",
+        "//third-party:chrono",
+        "//third-party:async-trait",
+        "//third-party:futures",
+        "//third-party:serde_json",
+        "//third-party:idgenerator",
+        "//third-party:rayon",
+        "//third-party:handlebars",
+
+        # dev deps
+        "//third-party:tokio",
+    ]
+)
+
+rust_library(
+    name = "callisto",
+    srcs = glob(["callisto/src/**/*.rs"]),
+    deps = [
+        "//common:common",
+        "//third-party:serde",
+        "//third-party:serde_json",
+        "//third-party:chrono",
+        "//third-party:sea-orm",
+    ]
+)

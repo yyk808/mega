@@ -1,1 +1,3 @@
 buildscript = []
+cargo_env = true
+env = { CARGO = "/usr/bin/cargo" }

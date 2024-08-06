@@ -1,0 +1,17 @@
+rust_library(
+    name = "venus",
+    srcs = glob(["src/**/*.rs"]),
+    deps = [
+        "//common:common",
+        "//jupiter:callisto",
+        "//mercury:mercury",
+        "//third-party:serde",
+        "//third-party:bstr",
+        "//third-party:hex",
+        "//third-party:thiserror",
+        "//third-party:tracing",
+        "//third-party:sha1",
+        "//third-party:colored",
+        "//third-party:chrono"
+    ]
+)

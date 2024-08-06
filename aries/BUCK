@@ -1,0 +1,21 @@
+rust_library(
+    name = "aries",
+    srcs = glob(["src/**/*.rs"]),
+    deps = [
+        "//common:common",
+        "//jupiter:callisto",
+        "//jupiter:jupiter",
+        "//gemini:gemini",
+        "//third-party:tokio,
+        "//third-party:clap",
+        "//third-party:tracing",
+        "//third-party:tracing-subscriber",
+        "//third-party:tracing-appender",
+        "//third-party:axum",
+        "//third-party:serde_json",
+        "//third-party:tower",
+        "//third-party:tower-http",
+        "//third-party:ctrlc",
+        "//third-party:regex",
+    ]
+)
