@@ -1,0 +1,19 @@
+rust_library(
+    name = "gemini",
+    srcs = glob(["src/**/*.rs"]),
+    deps = [
+        "//common:common",
+        "//jupiter:jupiter",
+        "//jupiter:callisto",
+        "//vault:vault",
+        "//venus:venus",
+        "//neptune:neptune",
+        "//third-party:axum",
+        "//third-party:serde",
+        "//third-party:serde_json",
+        "//third-party:reqwest",
+        "//third-party:tracing",
+        "//third-party:tokio",
+        "//third-party:chrono",
+    ]
+)

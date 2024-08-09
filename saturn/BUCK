@@ -1,0 +1,14 @@
+rust_library(
+    name = "saturn",
+    srcs = glob(["src/**/*.rs"]),
+    deps = [
+        "//common:common",
+        "//third-party:serde",
+        "//third-party:serde_json",
+        "//third-party:tracing",
+        "//third-party:tracing-subscriber",
+        "//third-party:thiserror",
+        "//third-party:itertools",
+        "//third-party:cedar-policy",
+    ]
+)

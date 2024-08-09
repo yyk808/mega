@@ -1,0 +1,26 @@
+rust_library(
+    name = "craft",
+    srcs = glob(["src/**/*.rs"]),
+    deps = [
+        "//third-party:pgp",
+        "//third-party:smallvec",
+        "//third-party:rusty_vault",
+        "//third-party:fs2",
+        "//third-party:gettext-rs",
+        "//third-party:gettext-sys",
+        "//third-party:libc",
+        "//third-party:anyhow",
+        "//third-party:rand",
+        "//third-party:clap",
+        "//third-party:serde_json",
+        "//third-party:serde",
+        "//third-party:go-defer",
+        "//third-party:hex",
+        "//third-party:tracing",
+        "//third-party:zeroize",
+        "//third-party:md5",
+        "//third-party:rayon",
+        "//third-party:sha2",
+        "//third-party:memmap2",
+    ]
+)

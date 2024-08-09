@@ -1,0 +1,53 @@
+rust_library(
+    name = "mercury",
+    srcs = glob(["src/**/*.rs"]),
+    deps = [
+        "//mercury:delta",
+        "//common:common",
+        "//jupiter:callisto",
+        "//third-party:flate2",
+        "//third-party:serde",
+        "//third-party:bstr",
+        "//third-party:hex",
+        "//third-party:thiserror",
+        "//third-party:tracing",
+        "//third-party:uuid",
+        "//third-party:sha1_smol",
+        "//third-party:threadpool",
+        "//third-party:num_cpus",
+        "//third-party:dashmap",
+        "//third-party:tokio",
+        "//third-party:lru-mem",
+        "//third-party:bincode",
+        "//third-party:byteorder",
+        "//third-party:futures-util",
+        "//third-party:bytes",
+        "//third-party:axum",
+        "//third-party:memchr",
+        "//third-party:tracing-test",
+        "//third-party:tokio-util",
+
+        # FIXME: optional dep on windows
+        # "//third-party:mimalloc",
+    ]
+)
+
+rust_library(
+    name = "delta",
+    srcs = glob(["delta/src/**/*.rs"]),
+    deps = [
+        "//common:common",
+        "//jupiter:jupiter",
+        "//jupiter:callisto",
+        "//vault:vault",
+        "//venus:venus",
+        "//neptune:neptune",
+        "//third-party:axum",
+        "//third-party:serde",
+        "//third-party:serde_json",
+        "//third-party:reqwest",
+        "//third-party:tracing",
+        "//third-party:tokio",
+        "//third-party:chrono",
+    ]
+)
