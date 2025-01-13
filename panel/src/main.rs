@@ -4,7 +4,7 @@ mod frontend;
 use common::config::Config as MegaConfig;
 use tracing::{warn, warn_span};
 
-const CONFIG_PATH: &str = "config.toml";
+const CONFIG_PATH: &str = "panel/config.toml";
 
 #[tokio::main]
 async fn main() {
