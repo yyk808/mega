@@ -1,6 +1,5 @@
 name = "Monobean"
 product_name = "Monobean"
-version = "0.0.1"
 identifier = "org.Web3Infrastructure.Monobean"
 category = "DeveloperTool"
 formats = ["nsis"]
