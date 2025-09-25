@@ -3,7 +3,7 @@ use crate::internal::model::sea_models::{
     git_commit as sea_git_commit, mega_commit as sea_mega_commit,
 };
 use crate::internal::{
-    object::{commit::Commit, ObjectTrait},
+    object::{ObjectTrait, commit::Commit},
     pack::entry::Entry,
 };
 use serde_json;

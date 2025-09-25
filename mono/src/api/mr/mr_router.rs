@@ -1,11 +1,10 @@
 use std::path::PathBuf;
 
 use axum::{
-    extract::{Path, Query, State},
     Json,
+    extract::{Path, State},
 };
 use callisto::sea_orm_active_enums::{ConvTypeEnum, MergeStatusEnum};
-use ceres::model::git::TreeQuery;
 use common::{
     errors::MegaError,
     model::{CommonPage, CommonResult, PageParams},
@@ -17,6 +16,7 @@ use crate::api::mr::model::{
     ChangeReviewStatePayload, ChangeReviewerStatePayload, ReviewerInfo, ReviewerPayload,
     ReviewersResponse,
 };
+use crate::api::{MonoApiServiceState, mr::FilesChangedPage};
 use crate::api::{
     api_common::{
         self,
@@ -28,7 +28,6 @@ use crate::api::{
     mr::{Condition, MRDetailRes, MergeBoxRes, MrFilesRes, MuiTreeNode},
     oauth::model::LoginUser,
 };
-use crate::api::{mr::FilesChangedPage, MonoApiServiceState};
 use crate::{api::error::ApiError, server::http_server::MR_TAG};
 
 pub fn routers() -> OpenApiRouter<MonoApiServiceState> {
@@ -52,8 +51,8 @@ pub fn routers() -> OpenApiRouter<MonoApiServiceState> {
             .routes(routes!(add_reviewers))
             .routes(routes!(remove_reviewers))
             .routes(routes!(list_reviewers))
-            .routes(routes!(change_reviewer_state))
-            .routes(routes!(change_review_resolve_state)),
+            .routes(routes!(reviewer_approve))
+            .routes(routes!(review_resolve)),
     )
 }
 
@@ -272,7 +271,6 @@ async fn mr_detail(
     get,
     params(
         ("link", description = "MR link"),
-        TreeQuery,
     ),
     path = "/{link}/mui-tree",
     responses(
@@ -282,14 +280,11 @@ async fn mr_detail(
 )]
 async fn mr_mui_tree(
     Path(link): Path<String>,
-    Query(query): Query<TreeQuery>,
     state: State<MonoApiServiceState>,
 ) -> Result<Json<CommonResult<Vec<MuiTreeNode>>>, ApiError> {
-    let path = query.path.clone();
-
     let files = state
         .monorepo()
-        .get_sorted_changed_file_list(&link, Some(&path))
+        .get_sorted_changed_file_list(&link, None)
         .await?;
     let mui_trees = build_forest(files);
     Ok(Json(CommonResult::success(Some(mui_trees))))
@@ -509,7 +504,7 @@ async fn assignees(
     params (
         ("link", description = "the mr link")
     ),
-    path = "/{link}/add-reviewers",
+    path = "/{link}/reviewers",
     request_body = ReviewerPayload,
     responses(
         (status = 200, body = CommonResult<String>, content_type = "application/json")
@@ -535,7 +530,7 @@ async fn add_reviewers(
     params (
         ("link", description = "the mr link"),
     ),
-    path = "/{link}/remove-reviewers",
+    path = "/{link}/reviewers",
     request_body = ReviewerPayload,
     responses(
         (status = 200, body = CommonResult<String>, content_type = "application/json")
@@ -596,14 +591,14 @@ async fn list_reviewers(
     params (
         ("link", description = "the mr link")
     ),
-    path = "/{link}/reviewer-new-state",
+    path = "/{link}/reviewer/approve",
     request_body = ChangeReviewerStatePayload,
     responses(
         (status = 200, body = CommonResult<String>, content_type = "application/json")
     ),
     tag = MR_TAG
 )]
-async fn change_reviewer_state(
+async fn reviewer_approve(
     user: LoginUser,
     Path(link): Path<String>,
     state: State<MonoApiServiceState>,
@@ -612,7 +607,7 @@ async fn change_reviewer_state(
     state
         .storage
         .reviewer_storage()
-        .reviewer_change_state(&link, &user.username, payload.state)
+        .reviewer_change_state(&link, &user.username, payload.approved)
         .await?;
 
     Ok(Json(CommonResult::success(None)))
@@ -623,7 +618,7 @@ async fn change_reviewer_state(
     params (
         ("link", description = "the mr link")
     ),
-    path = "/{link}/review_resolve",
+    path = "/{link}/review/resolve",
     request_body (
         content = ChangeReviewStatePayload,
     ),
@@ -632,7 +627,7 @@ async fn change_reviewer_state(
     ),
     tag = MR_TAG
 )]
-async fn change_review_resolve_state(
+async fn review_resolve(
     user: LoginUser,
     state: State<MonoApiServiceState>,
     Path(link): Path<String>,
@@ -643,9 +638,9 @@ async fn change_review_resolve_state(
         .conversation_storage()
         .change_review_state(
             &link,
-            &payload.review_id,
+            &payload.conversation_id,
             &user.campsite_user_id,
-            payload.new_state,
+            payload.resolved,
         )
         .await?;
 
