@@ -114,12 +114,22 @@ pub fn tree_to_mega_tree(tree: Tree, commit_id: &str) -> mega_tree::Model {
 /// It parses the parent commit IDs from JSON, extracts author and committer information,
 /// and constructs a new Commit object with the appropriate data.
 pub fn git_commit_to_commit(model: git_commit::Model) -> Commit {
-    let parent_commit_ids: Vec<SHA1> =
-        serde_json::from_str::<Vec<String>>(model.parents_id.to_string().as_str())
-            .unwrap_or_default()
-            .iter()
-            .map(|id| SHA1::from_str(id).unwrap())
-            .collect();
+    let parent_commit_ids: Vec<SHA1> = match model.parents_id {
+        serde_json::Value::Array(arr) => {
+            arr.iter()
+                .filter_map(|v| v.as_str())
+                .map(|id| SHA1::from_str(id).unwrap())
+                .collect()
+        }
+        serde_json::Value::String(s) => {
+            // Try to parse the string as a JSON array
+            match serde_json::from_str::<Vec<String>>(&s) {
+                Ok(ids) => ids.iter().map(|id| SHA1::from_str(id).unwrap()).collect(),
+                Err(_) => vec![], // If parsing fails, return an empty vector
+            }
+        }
+        _ => vec![], // For other types, return an empty vector
+    };
 
     let author = model
         .author
@@ -189,12 +199,22 @@ pub fn commit_to_git_commit(commit: Commit, repo_id: i64) -> git_commit::Model {
 /// It parses the parent commit IDs from JSON, extracts author and committer information,
 /// and constructs a new Commit object with the appropriate data.
 pub fn mega_commit_to_commit(model: mega_commit::Model) -> Commit {
-    let parent_commit_ids: Vec<SHA1> =
-        serde_json::from_str::<Vec<String>>(model.parents_id.to_string().as_str())
-            .unwrap_or_default()
-            .iter()
-            .map(|id| SHA1::from_str(id).unwrap())
-            .collect();
+    let parent_commit_ids: Vec<SHA1> = match model.parents_id {
+        serde_json::Value::Array(arr) => {
+            arr.iter()
+                .filter_map(|v| v.as_str())
+                .map(|id| SHA1::from_str(id).unwrap())
+                .collect()
+        }
+        serde_json::Value::String(s) => {
+            // Try to parse the string as a JSON array
+            match serde_json::from_str::<Vec<String>>(&s) {
+                Ok(ids) => ids.iter().map(|id| SHA1::from_str(id).unwrap()).collect(),
+                Err(_) => vec![], // If parsing fails, return an empty vector
+            }
+        }
+        _ => vec![], // For other types, return an empty vector
+    };
 
     let author = model
         .author
