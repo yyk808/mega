@@ -4,10 +4,8 @@ members = [
     "mega",
     "gateway",
     "common",
-    "mercury",
     "jupiter",
     "ceres",
-    "libra",
     "vault",
     "aries",
     "saturn",
@@ -18,16 +16,14 @@ members = [
     "extensions/observatory",
     "context",
     "neptune",
-    "scorpio",
 ]
-default-members = ["mega", "mono", "libra", "aries", "orion", "orion-server"]
+default-members = ["mega", "mono", "aries", "orion", "orion-server"]
 resolver = "1"
-exclude = ["scorpio"] 
+exclude = ["scorpio", "libra"]
 
 [workspace.dependencies]
 gateway = { path = "gateway" }
 common = { path = "common" }
-mercury = { path = "mercury" }
 jupiter = { path = "jupiter" }
 ceres = { path = "ceres" }
 callisto = { path = "jupiter/callisto" }
@@ -40,6 +36,7 @@ orion = { path = "orion" }
 bellatrix = { path = "orion-server/bellatrix" }
 context = { path = "context" }
 neptune = { path = "neptune" }
+mercury = { path = "mercury" }
 
 #====
 anyhow = "1.0.98"
